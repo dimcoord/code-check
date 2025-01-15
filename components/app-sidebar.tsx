@@ -94,7 +94,7 @@ export function AppSidebar({props}: ChildComponentProps) {
                 <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <SidebarMenuButton>
-                    {props ? (<div><User2 /> {props.full_name}</div>) : (<p>Loading...</p>)}
+                    {props ? (<div> {props.full_name}</div>) : (<p>Loading...</p>)}
                     <ChevronUp className="ml-auto" />
                     </SidebarMenuButton>
                 </DropdownMenuTrigger>

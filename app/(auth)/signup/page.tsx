@@ -162,7 +162,11 @@ export default function SignupPage() {
                 <FormMessage />
               </FormItem>
             )} />
-          <Button type="submit">Daftar Sekarang!</Button>
+          <div className="flex flex-col space-y-4">
+            <Button type="submit">Daftar Sekarang!</Button>
+            <span className="text-center">Sudah punya akun? 
+              <a href="/login" className="underline"> Masuk</a></span>
+          </div>
         </form>
       </Form>
       </CardContent></Card></div>

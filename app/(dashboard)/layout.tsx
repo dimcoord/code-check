@@ -11,7 +11,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     redirect('/login')
   }
 
-  const sidebarProps = { full_name: data.user.email! }
+  const sidebarProps = { full_name: data.user.user_metadata["full_name"]! }
   
   return (
     <SidebarProvider>

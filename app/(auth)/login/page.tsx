@@ -22,8 +22,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { createClient } from "@/utils/supabase/client";
 import { login } from "@/lib/auth-actions";
+import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 const profileFormSchema = z.object({
   email: z
@@ -43,6 +45,21 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 export default function SignupPage() {
+  const [user, setUser] = useState<any>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    fetchUser()
+    }, [])
+  
+  if(user){
+    redirect("/dashboard")
+  }
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
   })
@@ -93,7 +110,11 @@ export default function SignupPage() {
                 <FormMessage />
               </FormItem>
             )} />
-          <Button type="submit">Daftar Sekarang!</Button>
+          <div className="flex flex-col space-y-4">
+            <Button type="submit">Masuk</Button>
+            <span className="text-center">Belum punya akun? 
+              <a href="/login" className="underline"> Daftar</a></span>
+          </div>
         </form>
       </Form>
       </CardContent></Card></div>

@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import { ArrowRight, Check } from 'lucide-react'
+import { createClient } from '@/utils/supabase/server'
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+  const { data: {user} } = await supabase.auth.getUser()
+
   return (
     <>
       <header className="bg-white shadow-sm">
@@ -10,12 +14,17 @@ export default function Home() {
             CodeCheck
           </Link>
           <div className="space-x-4">
-            <Link href="/login" className="text-gray-600 hover:text-blue-600">
-              Masuk
-            </Link>
-            <Link href="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Daftar
-            </Link>
+          {user ? (
+            <><Link href="/dashboard" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                  Dasbor
+                </Link></>
+          ) : (
+            <><Link href="/login" className="text-gray-600 hover:text-blue-600">
+                  Masuk
+                </Link><Link href="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    Daftar
+                  </Link></>
+          )}
           </div>
         </nav>
       </header>
