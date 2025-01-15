@@ -1,13 +1,9 @@
-import { DashboardNav } from "@/components/dashboard-nav"
-import { UserNav } from "@/components/user-nav"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.getUser()
@@ -15,21 +11,15 @@ export default async function DashboardLayout({
     redirect('/login')
   }
 
+  const sidebarProps = { full_name: data.user.email! }
+  
   return (
-    <div className="min-h-screen">
-      <div className="border-b">
-        <div className="flex h-16 items-center px-4">
-          <div className="font-bold"><a href="/">CodeCheck</a></div>
-          <div className="ml-auto flex items-center space-x-4">
-            <UserNav />
-          </div>
-        </div>
-      </div>
-      <div className="flex">
-        <DashboardNav className="w-64" />
-        <main className="flex-1 p-8">{children}</main>
-      </div>
-    </div>
+    <SidebarProvider>
+      <AppSidebar props={sidebarProps} />
+      <main>
+        <SidebarTrigger />
+        <div className="m-8 w-[73vw]">{children}</div>
+      </main>
+    </SidebarProvider>
   )
 }
-

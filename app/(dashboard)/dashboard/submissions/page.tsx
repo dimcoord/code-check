@@ -42,7 +42,7 @@ export default async function SubmissionsPage() {
           {submissions?.map((submission) => (
             <TableRow key={submission.id}>
               <TableCell className="font-medium">{submission.problem}</TableCell>
-              <TableCell>{submission.language}</TableCell>
+              <TableCell>{submission.language == '76' ? 'C++' : 'C'}</TableCell>
               <TableCell>
                 <Badge
                   variant={

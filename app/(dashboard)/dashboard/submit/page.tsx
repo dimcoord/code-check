@@ -57,12 +57,12 @@ export default function SubmitPage() {
 
   return (
     <div className="space-y-6">
-      <div>
+      {/* <div>
         <h2 className="text-3xl font-bold tracking-tight">Submit Code</h2>
         <p className="text-muted-foreground">
           Write your code and submit it for evaluation.
         </p>
-      </div>
+      </div> */}
       <Card>
         <CardHeader>
           <CardTitle>Code Editor</CardTitle>

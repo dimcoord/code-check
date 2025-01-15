@@ -5,12 +5,25 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 
-export async function login(formData: FormData) {
+interface ValidateLogin {
+    email: string;
+    password: string;
+}
+
+interface ValidateSignup {
+    full_name: string;
+    email: string;
+    password: string;
+    nim: string;
+    kelas: string;
+}
+
+export async function login(formData: ValidateLogin) {
   const supabase = createClient();
 
   const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
+    email: formData.email,
+    password: formData.password,
   };
 
   const { error } = await supabase.auth.signInWithPassword(data);
@@ -23,21 +36,18 @@ export async function login(formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: ValidateSignup) {
   const supabase = createClient();
 
   const data = {
-    full_name: formData.get("full-name") as string,
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-    nim: formData.get("nim") as string,
-    kelas: formData.get("kelas") as string,
+    email: formData.email,
+    password: formData.password,
     options: {
       data: {
-        full_name: formData.get("full-name") as string,
-        email: formData.get("email") as string,
-        nim: formData.get("nim") as string,
-        kelas: formData.get("kelas") as string,
+        full_name: formData.full_name,
+        email: formData.email,
+        nim: formData.nim,
+        kelas: formData.kelas,
       },
     },
   };
@@ -48,8 +58,8 @@ export async function signup(formData: FormData) {
     redirect("/error");
   }
 
-  revalidatePath("/dashboard", "layout");
-  redirect("/dashboard");
+  revalidatePath("/cek-email", "layout");
+  redirect("/cek-email");
 }
 
 export async function signout() {
