@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CodeCheck",
-  description: "Source code checker",
+  title: "Koderium",
+  description: "Koderium code submission platform",
 };
 
 export default function RootLayout({

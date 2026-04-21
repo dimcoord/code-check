@@ -11,7 +11,7 @@ export default async function Home() {
       <header className="bg-white shadow-sm">
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold text-blue-600">
-            CodeCheck
+            Koderium
           </Link>
           <div className="space-x-4">
           {user ? (
@@ -33,7 +33,7 @@ export default async function Home() {
         <section className="bg-gradient-to-b from-blue-50 to-white py-20">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Pemrograman Mudah dengan <span className="text-blue-600">CodeCheck</span>
+              Pemrograman Mudah dengan <span className="text-blue-600">Koderium</span>
             </h1>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
               Kelola kelas pemrograman Anda dengan cepat dan tepat.
@@ -50,7 +50,7 @@ export default async function Home() {
 
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Kenapa pilih CodeCheck?</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">Kenapa pilih Koderium?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 "100% Serverless",
@@ -74,7 +74,7 @@ export default async function Home() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600 mb-4 md:mb-0">
-              © 2025 CodeCheck.
+              © 2025 Koderium.
             </p>
             <div className="space-x-4">
               <Link href="https://github.com/dimcoord/code-check" className="text-gray-600 hover:text-blue-600">

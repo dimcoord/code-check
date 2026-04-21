@@ -65,7 +65,7 @@ export function AppSidebar({props}: ChildComponentProps) {
     return (
         <Sidebar>
         <SidebarHeader>
-            <h1 className="text-center text-xl text-black">CodeCheck</h1>
+            <h1 className="text-center text-xl text-black">Koderium</h1>
             <p className="text-center text-black">v0.1</p>
         </SidebarHeader>
         <SidebarContent>
