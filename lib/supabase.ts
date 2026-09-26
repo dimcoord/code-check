@@ -1,54 +1,53 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Assignment, ClassRecord, EnrollmentRecord, Profile, Submission } from '@/types/database'
 
 export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
 )
 
 export type Database = {
   public: {
     Tables: {
-      submissions: {
-        Row: {
-          id: string
-          user_id: string
-          problem: string
-          language: string
-          code: string
-          status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Runtime Error'
-          runtime: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          problem: string
-          language: string
-          code: string
-          status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Runtime Error'
-          runtime: string
-          created_at?: string
-        }
-      }
       profiles: {
-        Row: {
-          id: string
-          username: string
-          email: string
-          bio: string
-          avatar_url: string
-          updated_at: string
-        }
-        Insert: {
-          id: string
-          username: string
-          email: string
-          bio?: string
-          avatar_url?: string
+        Row: Profile
+        Insert: Partial<Profile> & { id: string; email: string }
+        Update: Partial<Profile>
+      }
+      classes: {
+        Row: ClassRecord
+        Insert: Omit<ClassRecord, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string
+          created_at?: string
           updated_at?: string
         }
+        Update: Partial<ClassRecord>
+      }
+      class_enrollments: {
+        Row: EnrollmentRecord
+        Insert: Omit<EnrollmentRecord, 'id' | 'created_at'> & {
+          id?: string
+          created_at?: string
+        }
+        Update: Partial<EnrollmentRecord>
+      }
+      assignments: {
+        Row: Assignment
+        Insert: Omit<Assignment, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: Partial<Assignment>
+      }
+      submissions: {
+        Row: Submission
+        Insert: Omit<Submission, 'id' | 'created_at'> & {
+          id?: string
+          created_at?: string
+        }
+        Update: Partial<Submission>
       }
     }
   }
 }
-

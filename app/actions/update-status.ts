@@ -5,45 +5,58 @@ import { getJudge0BaseUrl, parseJsonResponse } from "./judge0"
 
 export async function updateStatus() {
   const supabase = createClient()
-  
+
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) {
-    throw new Error('Not authenticated')
+    return
   }
 
-  const submissions = await supabase
+  const { data: pendingSubmissions } = await supabase
     .from('submissions')
-    .select("status, token")
-    .in("status", ["In Queue", "Processing"])
+    .select("id, status, token")
+    .in("status", ["In Queue", "Processing", "Pending"])
+    .not("token", "is", null)
+    .limit(10)
 
-  if(submissions.data){
-    const baseUrl = getJudge0BaseUrl()
-    const length = Object.keys(submissions.data).length;
-    console.log(length)
-    for(let i = 0; i < length; i++){
-      let token = submissions.data[i].token
-      let response = await fetch(`${baseUrl}/submissions/${token}?base64_encoded=false`)
+  if (!pendingSubmissions || pendingSubmissions.length === 0) {
+    return
+  }
 
-      if (!response.ok) {
-        const errorBody = await response.text()
-        throw new Error(`Judge0 result lookup failed (${response.status}): ${errorBody.slice(0, 200)}`)
+  const baseUrl = await getJudge0BaseUrl()
+
+  for (const item of pendingSubmissions) {
+    if (!item.token) continue
+    try {
+      const response = await fetch(`${baseUrl}/submissions/${item.token}?base64_encoded=false`, {
+        cache: 'no-store',
+      })
+
+      if (!response.ok) continue
+
+      const { data: res } = await parseJsonResponse<{
+        status?: { description?: string; id?: number }
+        time?: string
+        memory?: number
+        stdout?: string
+        stderr?: string
+        compile_output?: string
+      }>(response, 'Judge0 status check')
+
+      if (res.status?.description) {
+        await supabase
+          .from('submissions')
+          .update({
+            status: res.status.description,
+            runtime: res.time ? `${res.time}s` : undefined,
+            memory: res.memory ? `${res.memory} KB` : undefined,
+            stdout: res.stdout ?? null,
+            stderr: res.stderr ?? null,
+            compile_output: res.compile_output ?? null,
+          })
+          .eq("id", item.id)
       }
-
-      let res = (await parseJsonResponse<{ status?: { description?: string }, time?: string }>(response, 'Judge0 result lookup')).data
-      let status = res.status.description
-      let runtime = `${res.time} ms`
-
-      console.log(status, runtime)
-
-      let { data, error } = await supabase
-        .from('submissions')
-        .update({
-          status: status,
-          runtime: runtime,
-        })
-        .eq("token", token)
-
-      if (error) throw error
+    } catch (err) {
+      console.warn(`Failed to update status for token ${item.token}:`, err)
     }
   }
 }
